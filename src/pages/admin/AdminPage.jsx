@@ -7,7 +7,7 @@ export default function AdminPage() {
   return (
     <div className="w-full h-screen flex">
       
-      <div className="w-[300px] h-full bg-green-200">
+      <div className="w-[200px] h-full bg-green-200">
         <Link
           to="/admin/dashboard"
           className="w-full h-[40px] text-[25px] font-bold flex justify-center items-center"
@@ -41,7 +41,7 @@ export default function AdminPage() {
         </Link>
       </div>
 
-      <div className="w-[calc(100vw-300px)] h-full bg-amber-300">
+      <div className="w-[calc(100vw-200px)] h-full bg-amber-300">
         <Routes path="/*">
           <Route path="/bookings" element={<h1>Bookings</h1>} />
           <Route path="/dashboard" element={<h1>Dashboard</h1>} />

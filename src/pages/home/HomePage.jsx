@@ -5,6 +5,7 @@ import Gallery from "./Gallery";
 import Items from "./Items";
 import Contact from "./Contact";
 import Error from "./Error";
+import Testing from "../../components/Testing";
 
 export default function Homepage() {
   return (
@@ -15,6 +16,7 @@ export default function Homepage() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/items" element={<Items />} />
+          <Route path="/testing" element={<Testing />} />
           <Route path="/" element={<Home />} />
           <Route path="/*" element={<Error />} />
         </Routes>
