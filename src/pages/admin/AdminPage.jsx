@@ -3,6 +3,10 @@ import { FaRegBookmark } from "react-icons/fa6";
 import { MdOutlineSpeaker } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
 import { Link, Routes, Route } from "react-router-dom";
+import AdminItemsPage from "./adminItemsPage";
+import AddItemsPage from "./addItemsPage";
+
+
 export default function AdminPage() {
   return (
     <div className="w-full h-screen flex">
@@ -41,12 +45,13 @@ export default function AdminPage() {
         </Link>
       </div>
 
-      <div className="w-[calc(100vw-200px)] h-full bg-amber-300">
+      <div className="w-[calc(100vw-200px)] h-full">
         <Routes path="/*">
           <Route path="/bookings" element={<h1>Bookings</h1>} />
           <Route path="/dashboard" element={<h1>Dashboard</h1>} />
-          <Route path="/items" element={<h1>Items</h1>} />
+          <Route path="/items" element={<AdminItemsPage/>} />
           <Route path="/users" element={<h1>Users</h1>} />
+          <Route path="/items/add" element={<AddItemsPage/>} />
         </Routes>
       </div>
     </div>
