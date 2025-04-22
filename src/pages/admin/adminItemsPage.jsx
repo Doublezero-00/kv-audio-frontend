@@ -1,97 +1,120 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { GoPlusCircle } from "react-icons/go";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const simpleArr = [
-    {
-      key: "PROD001",
-      name: "Wireless Mouse",
-      price: 25.99,
-      category: "Electronics",
-      dimensions: "10x6x4 cm",
-      description: "Ergonomic wireless mouse with 2.4GHz connection.",
-      availability: true,
-      image: ["https://via.placeholder.com/150?text=Mouse"],
-    },
-    {
-      key: "PROD002",
-      name: "Bluetooth Speaker",
-      price: 45.50,
-      category: "Electronics",
-      dimensions: "15x10x10 cm",
-      description: "Portable Bluetooth speaker with bass boost.",
-      availability: true,
-      image: ["https://via.placeholder.com/150?text=Speaker"],
-    },
-    {
-      key: "PROD003",
-      name: "Notebook",
-      price: 5.99,
-      category: "Stationery",
-      dimensions: "21x29.7 cm",
-      description: "A4 size ruled notebook, 200 pages.",
-      availability: true,
-      image: ["https://via.placeholder.com/150?text=Notebook"],
-    },
-    {
-      key: "PROD004",
-      name: "Water Bottle",
-      price: 12.00,
-      category: "Home & Kitchen",
-      dimensions: "25x7x7 cm",
-      description: "Stainless steel insulated water bottle.",
-      availability: true,
-      image: ["https://via.placeholder.com/150?text=Bottle"],
-    },
-    {
-      key: "PROD005",
-      name: "Yoga Mat",
-      price: 20.99,
-      category: "Fitness",
-      dimensions: "183x61x0.6 cm",
-      description: "Non-slip yoga mat for all types of yoga and exercise.",
-      availability: true,
-      image: ["https://via.placeholder.com/150?text=Yoga+Mat"],
-    },
-  ];
+const simpleArr = [];
+
 export default function AdminItemsPage() {
+  const [Items, setItem] = useState(simpleArr);
+  const[itemsLoaded,setItemsLoaded] = useState(false);
+  const navigate = useNavigate();
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-    const [Items,setItem] = useState(simpleArr);
+  useEffect(() => {
 
-    return(
-        <div className="w-full h-full relative">
+    if(!itemsLoaded){
+      const token = localStorage.getItem("token");
+      if (token) {
+        axios
+          .get(`${backendUrl}/api/products`, {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+          .then((res) => {
+            setItem(res.data);
+            setItemsLoaded(true);
+          })
+          .catch((err) => {
+            console.log(err);
+            toast.error("Failed to fetch products");
+          });
+      } else {
+      toast.error("Please Login First");
+      navigate("/login");
+      }
+    }
+    
+  }, [itemsLoaded]);
 
-            <table>
-                <thead>
-                    <th>Key</th>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Category</th>
-                    <th>Dimensions</th>
-                    <th>Availability</th>
-                </thead>
-                <tbody>
-                    {
-                        Items.map((product)=>{
-                            console.log(product);
-                            return(
-                                <tr key={product.key}>
-                                    <td>{product.key}</td>
-                                    <td>{product.name}</td>
-                                    <td>{product.price}</td>
-                                    <td>{product.category}</td>
-                                    <td>{product.dimensions}</td>
-                                    <td>{product.availability ? "Available" : "Not Available"}</td>
-                                </tr>
-                            )
-                        })
-                    }
-                </tbody>
-            </table>
+  const handleDelete = async (key) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (token) {
+        await axios
+          .delete(`${backendUrl}/api/products/${key}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+          .then((res) => {
+            toast.success("Product Deleted Successfully");
+            setItemsLoaded(false);
+          })
+          .catch((err) => {
+            toast.error("Failed to Delete Product");
+            console.error(err);
+          });
+      } else {
+        toast.error("Please Login First");
+        navigate("/login");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong");
+    }
+  };
 
-            <Link to="/admin/items/add">
-            <GoPlusCircle className="text-[70px] absolute right-2 bottom-2 hover:text-red-900" />
-            </Link>
-        </div>
-    )
+  return (
+    <div className="w-full h-full relative p-4 flex-col justify-center items-center">
+      {!itemsLoaded &&<div className="border-4 my-4 border-b-blue-500 bg-0 rounded-full animate-spin w-[100px] h-[100px]"></div>}
+        <table className="w-[1050px] border border-collapse text-left shadow rounded overflow-hidden">
+          <thead className="bg-blue-600 text-white">
+            <tr>
+              <th className="border px-3 py-2">Key</th>
+              <th className="border px-3 py-2">Name</th>
+              <th className="border px-3 py-2">Price</th>
+              <th className="border px-3 py-2">Category</th>
+              <th className="border px-3 py-2">Dimensions</th>
+              <th className="border px-3 py-2">Availability</th>
+              <th className="border px-3 py-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+          {Items.map((product) => (
+            <tr key={product.key} className="hover:bg-gray-50">
+              <td className="border px-3 py-2">{product.key}</td>
+              <td className="border px-3 py-2">{product.name}</td>
+              <td className="border px-3 py-2">${product.price.toFixed(2)}</td>
+              <td className="border px-3 py-2">{product.category}</td>
+              <td className="border px-3 py-2">{product.dimensions}</td>
+              <td className="border px-3 py-2">
+                {product.availability ? "Available" : "Not Available"}
+              </td>
+              <td className="border px-3 py-2 flex flex-wrap gap-2">
+                <button onClick={()=>{
+                  navigate("/admin/items/edit", {state : product})
+                }}>
+                  <Link
+                    to={`/admin/items/edit`}
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm"
+                  >
+                    Edit
+                  </Link>
+                </button>
+                <button
+                  onClick={() => handleDelete(product.key)}
+                  className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <Link to="/admin/items/add">
+        <GoPlusCircle className="text-[70px] text-blue-500 hover:text-red-900 absolute right-4 bottom-4 transition duration-200" />
+      </Link>
+    </div>
+  );
 }
