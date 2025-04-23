@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import ProductCard from "../../components/ProductCard";
 
 export default function Items(){
 
@@ -10,6 +11,7 @@ export default function Items(){
     useEffect(()=>{
         if(state == "loading"){
             axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products`).then((res)=>{
+                console.log(res.data);
                 setItems(res.data);
                 setState("success");
             }).catch((err)=>{
@@ -20,8 +22,19 @@ export default function Items(){
     },[])
 
     return(
-        <div className="w-full h-screen flex flex-wrap pt-[50px]">
-            
+        <div className="w-full h-screen flex flex-wrap justify-center pt-[50px]">
+            {
+                state == "loading" && <div className="w-full h-full flex justify-center items-center">
+                    <div className="w-[50px] h-[50px] flex border-4 rounded-full border-t-blue-500 animate-spin"></div>
+                </div>
+            }
+            {
+                state=="success" && items.map((item)=>{
+                    return (
+                        <ProductCard key={item.key} item={item} />
+                    )
+                })
+            }
         </div>
     );
 }
