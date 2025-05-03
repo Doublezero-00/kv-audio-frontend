@@ -25,7 +25,7 @@ export default function Items(){
         <div className="w-full h-screen flex flex-wrap justify-center pt-[50px]">
             {
                 state == "loading" && <div className="w-full h-full flex justify-center items-center">
-                    <div className="w-[50px] h-[50px] flex border-4 rounded-full border-t-blue-500 animate-spin"></div>
+                    <div className="w-[50px] h-[50px] flex border-4 rounded-full border-t-blue-500 animate-spin border-white"></div>
                 </div>
             }
             {

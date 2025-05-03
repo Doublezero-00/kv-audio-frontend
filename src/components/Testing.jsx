@@ -1,21 +1,23 @@
 import { useState } from "react";
+import mediaUpload from "../utils/mediaUpload";
 
-export default function Testing(){
+export default function Testing() {
+  const [file, setFile] = useState(null);
 
-    const [count,setCount] = useState(0);
+  function uploadFiles() {
+    mediaUpload(file).then((url) => {
+      console.log(url);
+    }).catch((err) => {
+      console.error(err);
+    });
+  }
 
-    return(
-        <div className="w-full h-screen">
-
-            <h1>{count}</h1>
-
-            <button onClick={()=>{
-
-                const newCount = count+1;
-                setCount(newCount);
-                
-            }}>Count</button>
-
-        </div>
-    )
+  return (
+    <div className="w-full h-screen flex flex-col justify-center items-center gap-4">
+      <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+      <button onClick={uploadFiles} className="w-[200px] h-[50px] bg-blue-500 text-white rounded">
+        Upload
+      </button>
+    </div>
+  );
 }

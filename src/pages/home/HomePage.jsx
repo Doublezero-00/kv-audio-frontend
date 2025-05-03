@@ -11,7 +11,7 @@ export default function Homepage() {
   return (
     <>
       <Header />
-      <div className="h-[calc(100vh - 100px)] w-full bg-red-50">
+      <div className="h-[calc(100vh - 100px)] w-full ">
         <Routes path="/*">
           <Route path="/contact" element={<Contact />} />
           <Route path="/gallery" element={<Gallery />} />

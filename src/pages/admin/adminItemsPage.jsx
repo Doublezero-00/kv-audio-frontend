@@ -65,7 +65,7 @@ export default function AdminItemsPage() {
 
   return (
     <div className="w-full h-full relative p-4 flex-col justify-center items-center">
-      {!itemsLoaded &&<div className="border-4 my-4 border-b-blue-500 bg-0 rounded-full animate-spin w-[100px] h-[100px]"></div>}
+      {!itemsLoaded &&<div className="border-4 border-white my-4 border-b-blue-500 bg-0 rounded-full animate-spin w-[100px] h-[100px]"></div>}
         <table className="w-[1050px] border border-collapse text-left shadow rounded overflow-hidden">
           <thead className="bg-blue-600 text-white">
             <tr>
