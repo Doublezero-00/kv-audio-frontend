@@ -23,10 +23,14 @@ export default function mediaUpload(files) {
         upsert: false,
       })
       .then((response) => {
-        const { data } = supabase.storage.from("images").getPublicUrl(fileName);
-        resolve(data.publicUrl);
+        if (response.error) {
+          reject("Error uploading file");
+        } else {
+          const { data } = supabase.storage.from("images").getPublicUrl(fileName);
+          resolve(data.publicUrl);
+        }
       })
-      .catch(() => {
+      .catch((error) => {
         reject("Error uploading file");
       });
   });

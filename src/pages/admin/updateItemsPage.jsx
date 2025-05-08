@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
+import mediaUpload from "../../utils/mediaUpload";
 
 export default function UpdateItemsPage() {
 
@@ -14,9 +15,27 @@ export default function UpdateItemsPage() {
     const [productCategory, setProductCategory] = useState(location.state.category);
     const [productDimensions, setProductDimensions] = useState(location.state.dimensions);
     const [productDescription, setProductDescription] = useState(location.state.description);
+    const [productImages, setProductImages] = useState([]);
+
     const navigate = useNavigate();
 
-    async function handleAddItems(){
+    async function handleUpdateItems(){
+
+        let updatingImages = location.state.image;
+
+        if(productImages.length > 0){
+            const promises = [];
+
+            for (let i = 0; i < productImages.length; i++) {
+                console.log(productImages[i]);
+                const promise = mediaUpload(productImages[i]);
+                promises.push(promise);
+            }
+
+            updatingImages = await Promise.all(promises);
+        }
+
+
         const token = localStorage.getItem("token");
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
         
@@ -28,7 +47,8 @@ export default function UpdateItemsPage() {
                     price : productPrice,
                     category : productCategory,
                     dimensions : productDimensions,
-                    description : productDescription
+                    description : productDescription,
+                    image: updatingImages
                 }, {
                     headers : {
                         Authorization : "Bearer " + token
@@ -99,9 +119,10 @@ export default function UpdateItemsPage() {
                         placeholder="Product Description" 
                         className="p-3 border rounded-md"
                     />
+                    <input type="file" multiple onChange={(e)=>{setProductImages(e.target.files)}} className="w-full p-2 border rounded"/>
 
                     <div className="flex justify-between gap-4">
-                        <button onClick={handleAddItems} 
+                        <button onClick={handleUpdateItems} 
                             className="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition"
                         >
                             Update Item

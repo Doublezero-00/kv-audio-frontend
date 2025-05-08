@@ -6,6 +6,7 @@ import Items from "./Items";
 import Contact from "./Contact";
 import Error from "./Error";
 import Testing from "../../components/Testing";
+import ProductOverview from "./productOverview";
 
 export default function Homepage() {
   return (
@@ -17,6 +18,7 @@ export default function Homepage() {
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/items" element={<Items />} />
           <Route path="/testing" element={<Testing />} />
+          <Route path="/product/:key" element={<ProductOverview />} />
           <Route path="/" element={<Home />} />
           <Route path="/*" element={<Error />} />
         </Routes>

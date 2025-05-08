@@ -2,6 +2,8 @@ import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import mediaUpload from "../../utils/mediaUpload";
+
 
 export default function AddItemsPage() {
 
@@ -11,21 +13,36 @@ export default function AddItemsPage() {
     const [productCategory, setProductCategory] = useState("Audio");
     const [productDimensions, setProductDimensions] = useState("");
     const [productDescription, setProductDescription] = useState("");
+    const [productImages, setProductImages] = useState([]);
+
     const navigate = useNavigate();
 
     async function handleAddItems(){
+
+        const promises = [];
+
+        for(let i=0; i<productImages.length; i++){
+            console.log(productImages[i]);
+            const promise = mediaUpload(productImages[i]);
+            promises.push(promise);
+        }
+
         const token = localStorage.getItem("token");
         const backendUrl = import.meta.env.VITE_BACKEND_URL;
         
         if(token){
             try {
+
+                const imageUrls = await Promise.all(promises);
+
                 const result = await axios.post(`${backendUrl}/api/products`, {
                     key : productKey,
                     name : productName,
                     price : productPrice,
                     category : productCategory,
                     dimensions : productDimensions,
-                    description : productDescription
+                    description : productDescription,
+                    image : imageUrls
                 }, {
                     headers : {
                         Authorization : "Bearer " + token
@@ -95,6 +112,8 @@ export default function AddItemsPage() {
                         placeholder="Product Description" 
                         className="p-3 border rounded-md"
                     />
+
+                    <input type="file" multiple onChange={(e)=>{setProductImages(e.target.files)}} className="w-full p-2 border rounded"/>
 
                     <div className="flex justify-between gap-4">
                         <button onClick={handleAddItems} 
