@@ -7,6 +7,8 @@ import AdminItemsPage from "./adminItemsPage";
 import AddItemsPage from "./addItemsPage";
 import UpdateItemsPage from "./updateItemsPage";
 import AdminUsersPage from "./adminUsersPage";
+import AdminOrdersPage from "./adminBookingPage";
+import AdminBookingPage from "./adminBookingPage";
 
 
 export default function AdminPage() {
@@ -49,7 +51,7 @@ export default function AdminPage() {
 
       <div className="w-[calc(100vw-200px)] h-full">
         <Routes path="/*">
-          <Route path="/bookings" element={<h1>Bookings</h1>} />
+          <Route path="/booking" element={<AdminBookingPage />} />
           <Route path="/dashboard" element={<h1>Dashboard</h1>} />
           <Route path="/items" element={<AdminItemsPage/>} />
           <Route path="/users" element={<AdminUsersPage />} />
