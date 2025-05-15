@@ -7,11 +7,38 @@ import AdminItemsPage from "./adminItemsPage";
 import AddItemsPage from "./addItemsPage";
 import UpdateItemsPage from "./updateItemsPage";
 import AdminUsersPage from "./adminUsersPage";
-import AdminOrdersPage from "./adminBookingPage";
 import AdminBookingPage from "./adminBookingPage";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 
 export default function AdminPage() {
+
+  const[userValidated, setUserValidated] = useState(false);
+
+  useEffect(()=>{
+
+    const token = localStorage.getItem("token");
+    if(!token){
+      window.location.href = "/login";
+    }
+
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users}`,{
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    }).then((res)=>{
+      console.log(res);
+      const user = res.data;
+      if(user.role != "admin"){
+        window.location.href = "/";
+      }
+    }).catch((err)=>{
+      console.error(err);
+      setUserValidated(false);
+    })
+  })
+
   return (
     <div className="w-full h-screen flex">
       

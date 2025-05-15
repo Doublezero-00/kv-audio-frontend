@@ -23,7 +23,7 @@ export default function ProductOverview() {
     },[])
 
     return(
-        <div className="w-full h-screen flex justify-center items-center">
+        <div className="w-full flex justify-center">
 
             {
                 loadingStatus == "loading" && <div className="w-full h-full flex justify-center items-center">
@@ -31,12 +31,13 @@ export default function ProductOverview() {
                 </div>
             }
             {
-                loadingStatus == "loaded" && <div className="w-full h-full mt-1 flex justify-center items-center">
+                loadingStatus == "loaded" && <div className="w-full h-full mb-5 flex flex-col justify-center items-center">
+                    <h1 className="text-3xl my-2 md:hidden font-bold text-blue-500">{product.name}</h1>
                     <div className="w-[49%] h-full">
                         <ImageSlider images={product.image} />
                     </div>
                     <div className="w-[49%] h-full flex flex-col items-center">
-                        <h1 className="text-3xl font-bold text-blue-500">{product.name}</h1>
+                        
                         <h2 className="text-xl font-semibold text-gray-300">{product.category}</h2>
                         <p className="text-gray-700 mt-4">{product.description}</p>
                         <p className="text-lg font-bold text-green-500">{product.price}</p>
