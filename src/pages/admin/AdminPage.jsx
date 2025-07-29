@@ -10,6 +10,7 @@ import AdminUsersPage from "./adminUsersPage";
 import AdminBookingPage from "./adminBookingPage";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import AdminDashboard from "./adminDashboard";
 
 export default function AdminPage() {
   const [userValidated, setUserValidated] = useState(false);
@@ -76,7 +77,7 @@ export default function AdminPage() {
       <div className="w-[calc(100vw-200px)] h-full">
         <Routes path="/*">
           <Route path="/booking" element={<AdminBookingPage />} />
-          <Route path="/dashboard" element={<h1>Dashboard</h1>} />
+          <Route path="/dashboard" element={<AdminDashboard />} />
           <Route path="/items" element={<AdminItemsPage />} />
           <Route path="/users" element={<AdminUsersPage />} />
           <Route path="/items/add" element={<AddItemsPage />} />

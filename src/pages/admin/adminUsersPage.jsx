@@ -20,6 +20,7 @@ export default function AdminUsersPage() {
         setUsers(res.data);
       } catch (error) {
         console.error("Error fetching users:", error);
+        alert("Failed to load users. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -43,7 +44,7 @@ export default function AdminUsersPage() {
         }
       )
       .then(() => {
-        setLoading(true); // Refresh users list
+        setLoading(true); // Refresh the users list
       })
       .catch((err) => {
         console.error("Failed to block/unblock user:", err.response || err);
@@ -55,55 +56,67 @@ export default function AdminUsersPage() {
   }
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-semibold mb-4">Admin Users</h1>
+    <div className="p-6 max-w-full overflow-x-auto">
+      <h1 className="text-3xl font-semibold mb-6 text-center text-indigo-700">
+        Admin Users
+      </h1>
+
       {loading ? (
-        <p className="text-center text-gray-600">Loading...</p>
+        <p className="text-center text-gray-500 text-lg">Loading users...</p>
+      ) : users.length === 0 ? (
+        <p className="text-center text-red-600 text-lg font-semibold">
+          No users found.
+        </p>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
-            <thead className="bg-gray-200">
-              <tr>
-                <th className="px-4 py-2 text-left">Profile</th>
-                <th className="px-4 py-2 text-left">Name</th>
-                <th className="px-4 py-2 text-left">Email</th>
-                <th className="px-4 py-2 text-left">Role</th>
-                <th className="px-4 py-2 text-left">Phone</th>
-                <th className="px-4 py-2 text-left">Address</th>
-                <th className="px-4 py-2 text-left">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user) => (
-                <tr
-                  key={user._id}
-                  className="border-t hover:bg-gray-100 cursor-pointer"
-                  onClick={() => handleBlockUser(user.email)}
+        <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
+          <thead className="bg-indigo-100 text-indigo-800">
+            <tr>
+              <th className="px-4 py-3 text-left">Profile</th>
+              <th className="px-4 py-3 text-left">Name</th>
+              <th className="px-4 py-3 text-left">Email</th>
+              <th className="px-4 py-3 text-left">Role</th>
+              <th className="px-4 py-3 text-left">Phone</th>
+              <th className="px-4 py-3 text-left">Address</th>
+              <th className="px-4 py-3 text-left">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr
+                key={user._id}
+                className={`border-t hover:bg-indigo-50 cursor-pointer transition-colors duration-200 ${
+                  user.isBlocked ? "bg-red-50" : ""
+                }`}
+                onClick={() => handleBlockUser(user.email)}
+                title="Click to block/unblock user"
+              >
+                <td className="px-4 py-3">
+                  <img
+                    src={user.profilePicture || "https://via.placeholder.com/50"}
+                    alt={`${user.firstName} ${user.lastName}`}
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+                </td>
+                <td className="px-4 py-3 font-medium">
+                  {user.firstName} {user.lastName}
+                </td>
+                <td className="px-4 py-3 lowercase">{user.email}</td>
+                <td className="px-4 py-3 capitalize">{user.role}</td>
+                <td className="px-4 py-3">{user.phone || user.phoneNumber || "N/A"}</td>
+                <td className="px-4 py-3 max-w-xs truncate" title={user.address}>
+                  {user.address || "N/A"}
+                </td>
+                <td
+                  className={`px-4 py-3 font-semibold ${
+                    user.isBlocked ? "text-red-600" : "text-green-600"
+                  }`}
                 >
-                  <td className="px-4 py-2">
-                    <img
-                      src={
-                        user.profilePicture || "https://via.placeholder.com/50"
-                      }
-                      alt="Profile"
-                      className="w-10 h-10 rounded-full"
-                    />
-                  </td>
-                  <td className="px-4 py-2">
-                    {user.firstName} {user.lastName}
-                  </td>
-                  <td className="px-4 py-2">{user.email}</td>
-                  <td className="px-4 py-2 capitalize">{user.role}</td>
-                  <td className="px-4 py-2">{user.phone || user.phoneNumber}</td>
-                  <td className="px-4 py-2">{user.address}</td>
-                  <td className="px-4 py-2">
-                    {user.isBlocked ? "BLOCKED" : "ACTIVE"}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                  {user.isBlocked ? "BLOCKED" : "ACTIVE"}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );

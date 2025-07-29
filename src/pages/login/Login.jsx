@@ -1,74 +1,76 @@
 import { useState } from "react";
-import "./login.css";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const navigate = useNavigate();
+  function handleOnSubmit(e) {
+    e.preventDefault();
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-    function handleOnSubmit(e) {
-        e.preventDefault();
-        console.log(email, password);
-        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    axios
+      .post(`${backendUrl}/api/users/login`, {
+        email: email,
+        password: password,
+      })
+      .then((res) => {
+        toast.success("Login Successful");
 
-        axios.post(`${backendUrl}/api/users/login`, {
-            email: email,
-            password: password
-        })
-        .then((res) => {
-            console.log(res);
-            toast.success("Login Successfull");
+        const user = res.data?.user;
 
-            const user = res.data?.user;
+        localStorage.setItem("token", res.data.token);
 
-            localStorage.setItem("token", res.data.token);
+        if (user && user.role === "admin") {
+          navigate("/admin/");
+        } else {
+          navigate("/");
+        }
+      })
+      .catch(() => {
+        toast.error("Login Failed");
+      });
+  }
 
-            if (user && user.role === "admin") {
-                navigate("/admin/");
-            } else {
-                navigate("/");
-            }
+  return (
+    <div className="w-full min-h-screen flex justify-center items-center bg-picture bg-cover bg-center p-4">
+      <div className="w-full max-w-md bg-black/50 backdrop-blur-lg rounded-2xl p-6 sm:p-10 flex flex-col items-center shadow-lg">
+        <img
+          src="/logo1.png"
+          alt="Logo"
+          className="w-20 h-20 mb-6 sm:w-24 sm:h-24"
+        />
 
-        })
-        .catch((err) => {
-            console.log(err);
-            toast.error("Login Failed");
-        });
-    }
+        <form className="w-full" onSubmit={handleOnSubmit}>
+          <input
+            type="email"
+            placeholder="Email"
+            className="w-full h-12 bg-transparent border-b-2 border-white text-white placeholder-white focus:outline-none focus:border-yellow-400 mb-5 text-base sm:text-lg"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
 
-    return (
-        <div className="w-full h-screen flex justify-center items-center bg-picture">
-            <div className="w-[400px] h-[400px] flex justify-center items-center flex-col backdrop-blur-lg rounded-2xl relative">
-                <img src="/logo1.png" className="w-[100px] h-[100px] absolute top-1" />
+          <input
+            type="password"
+            placeholder="Password"
+            className="w-full h-12 bg-transparent border-b-2 border-white text-white placeholder-white focus:outline-none focus:border-yellow-400 mb-8 text-base sm:text-lg"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
 
-                <form onSubmit={handleOnSubmit}>
-                    <input
-                        type="email"
-                        placeholder="Email"
-                        className="w-[300px] h-[50px] bg-transparent border-b-2 border-white text-white"
-                        value={email}
-                        onChange={(e) => {
-                            setEmail(e.target.value);
-                        }}
-                    />
-
-                    <input
-                        type="password"
-                        placeholder="Password"
-                        className="w-[300px] h-[50px] bg-transparent border-b-2 border-white text-white mt-6"
-                        value={password}
-                        onChange={(e) => {
-                            setPassword(e.target.value);
-                        }}
-                    />
-
-                    <button className="w-[300px] h-[50px] bg-[#f0ad38] text-white rounded-lg mt-8">Login</button>
-                </form>
-            </div>
-        </div>
-    );
+          <button
+            type="submit"
+            className="w-full h-12 bg-yellow-400 hover:bg-yellow-500 text-white rounded-lg font-semibold text-base sm:text-lg transition"
+          >
+            Login
+          </button>
+        </form>
+      </div>
+    </div>
+  );
 }
