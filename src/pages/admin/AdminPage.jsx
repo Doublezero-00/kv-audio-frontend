@@ -11,37 +11,34 @@ import AdminBookingPage from "./adminBookingPage";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-
 export default function AdminPage() {
+  const [userValidated, setUserValidated] = useState(false);
 
-  const[userValidated, setUserValidated] = useState(false);
-
-  useEffect(()=>{
-
+  useEffect(() => {
     const token = localStorage.getItem("token");
-    if(!token){
-      window.location.href = "/login";
-    }
 
-    axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users}`,{
-      headers: {
-        Authorization: `Bearer ${token}`,
-      }
-    }).then((res)=>{
-      console.log(res);
-      const user = res.data;
-      if(user.role != "admin"){
-        window.location.href = "/";
-      }
-    }).catch((err)=>{
-      console.error(err);
-      setUserValidated(false);
-    })
-  })
+    axios
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/users`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        const user = res.data;
+        if (user.role != "admin") {
+          window.location.href = "/";
+        } else {
+          setUserValidated(true);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        setUserValidated(false);
+      });
+  }, []);
 
   return (
     <div className="w-full h-screen flex">
-      
       <div className="w-[200px] h-full bg-green-200">
         <Link
           to="/admin/dashboard"
@@ -80,9 +77,9 @@ export default function AdminPage() {
         <Routes path="/*">
           <Route path="/booking" element={<AdminBookingPage />} />
           <Route path="/dashboard" element={<h1>Dashboard</h1>} />
-          <Route path="/items" element={<AdminItemsPage/>} />
+          <Route path="/items" element={<AdminItemsPage />} />
           <Route path="/users" element={<AdminUsersPage />} />
-          <Route path="/items/add" element={<AddItemsPage/>} />
+          <Route path="/items/add" element={<AddItemsPage />} />
           <Route path="/items/edit" element={<UpdateItemsPage />} />
         </Routes>
       </div>

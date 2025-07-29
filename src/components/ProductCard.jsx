@@ -1,35 +1,42 @@
 import { Link } from "react-router-dom";
 
 export default function ProductCard({ item }) {
+  const imageUrl = Array.isArray(item.image) && item.image.length > 0
+    ? item.image[0]
+    : "https://via.placeholder.com/300x200.png?text=No+Image";
+
   return (
-    <div className="max-w-sm bg-white rounded-2xl shadow-md overflow-hidden m-4 hover:shadow-xl transition-shadow duration-300 relative">
+    <div className="w-[300px] bg-white rounded-lg shadow-lg overflow-hidden m-4 relative">
       <img
-        src={item.image[0]}
-        alt={item.name}
+        src={imageUrl}
+        alt={item?.name || "Product Image"}
         className="w-full h-48 object-cover"
       />
       <div className="p-4">
-        <h2 className="text-xl font-bold text-gray-800 mb-2">{item.name}</h2>
-        <p className="text-lg text-blue-600 font-semibold mb-2">{item.price}</p>
-        <p className="text-sm text-gray-600 mb-3">{item.description}</p>
-
-        <div className="flex flex-wrap text-sm text-gray-500 gap-2 mb-4">
-          <span className="bg-gray-100 px-2 py-1 rounded-full">
-            Category: {item.category}
-          </span>
-          <span className="bg-gray-100 px-2 py-1 rounded-full">
-            Dimensions: {item.dimensions}
+        <h2 className="text-2xl font-semibold text-gray-800">{item?.name || "Unnamed Product"}</h2>
+        <p className="text-gray-600 text-sm mt-2">{item?.category || "No category"}</p>
+        <p className="text-gray-700 mt-4">{item?.description || "No description available."}</p>
+        <div className="flex justify-between items-center mt-4">
+          <span className="text-lg font-bold text-green-500">
+            {item?.price != null ? `$${item.price}` : "N/A"}
           </span>
           <span
-            className={`px-2 py-1 rounded-full ${
-              item.availability ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+            className={`px-3 py-1 text-sm rounded-full ${
+              item?.availability ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
             }`}
           >
-            {item.availability ? "In Stock" : "Out of Stock"}
+            {item?.availability ? "In Stock" : "Out of Stock"}
           </span>
         </div>
-
-        <Link to={"/product/"+item.key} className="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors absolute mx-auto bottom-[30px]">
+        <div className="mt-4 text-sm text-gray-600">
+          <span className="font-medium">Dimensions:</span> {item?.dimensions || "N/A"}
+        </div>
+      </div>
+      <div className="flex justify-end h-full p-4 border-t border-gray-200">
+        <Link
+          to={`/product/${item?.key || ""}`}
+          className="text-center w-[90%] h-[40px] bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-200 absolute mx-auto bottom-3"
+        >
           View Details
         </Link>
       </div>
