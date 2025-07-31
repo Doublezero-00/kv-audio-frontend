@@ -31,18 +31,20 @@ export default function Items() {
         </div>
       )}
 
-      {state === "success" && items.length > 0 && (
+      {state === "success" &&
+        items.length > 0 &&
         items.map((item) => (
           <ProductCard key={item._id || item.id || item.key} item={item} />
-        ))
-      )}
+        ))}
 
       {state === "success" && items.length === 0 && (
         <p className="text-gray-500 text-center">No products found.</p>
       )}
 
       {state === "error" && (
-        <p className="text-red-500 text-center mt-4">Failed to load products.</p>
+        <p className="text-red-500 text-center mt-4">
+          Failed to load products.
+        </p>
       )}
     </div>
   );
