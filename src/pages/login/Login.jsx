@@ -2,11 +2,36 @@ import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { use } from "react";
+import { useGoogleLogin } from "@react-oauth/google";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const googleLogin = useGoogleLogin({
+    onSuccess: (res) => {
+      console.log(res);
+      axios
+        .post(`${import.meta.env.VITE_BACKEND_URL}/api/users/google`, {
+          accessToken: res.access_token,
+        })
+        .then((res) => {
+          console.log(res);
+          toast.success("Login Success");
+          const user = res.data.user;
+          localStorage.setItem("token", res.data.token);
+          if (user.role === "admin") {
+            navigate("/admin/");
+          } else {
+            navigate("/");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+  });
 
   function handleOnSubmit(e) {
     e.preventDefault();
@@ -23,6 +48,11 @@ export default function LoginPage() {
         const user = res.data?.user;
 
         localStorage.setItem("token", res.data.token);
+
+        if (user.emailVerified === false) {
+          navigate("/verify-email");
+          return;
+        }
 
         if (user && user.role === "admin") {
           navigate("/admin/");
@@ -68,6 +98,13 @@ export default function LoginPage() {
             className="w-full h-12 bg-yellow-400 hover:bg-yellow-500 text-white rounded-lg font-semibold text-base sm:text-lg transition"
           >
             Login
+          </button>
+          <button
+            type="submit"
+            onClick={googleLogin}
+            className="w-full h-12 mt-4 bg-yellow-400 hover:bg-yellow-500 text-white rounded-lg font-semibold text-base sm:text-lg transition"
+          >
+            Login with Google
           </button>
         </form>
       </div>
