@@ -53,7 +53,7 @@ export default function Header() {
       ) : (
         <Link
           to="/login"
-          className="hidden md:inline-block text-sm px-5 py-3 rounded-md text-white hover:bg-gray-200 transition"
+          className="hidden md:inline-block text-sm px-10 py-3 rounded-md text-white hover:bg-gray-200 transition"
         >
           Login
         </Link>
@@ -61,4 +61,4 @@ export default function Header() {
       <MobileNavPanel isOpen={navPanelOpen} setOpen={setNavPanelOpen} />
     </header>
   );
-}
+}
