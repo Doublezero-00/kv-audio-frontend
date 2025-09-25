@@ -5,49 +5,60 @@ import { Link } from "react-router-dom";
 import MobileNavPanel from "./mobileNavPanel";
 
 export default function Header() {
-	const [navPanelOpen, setNavPanelOpen] = useState(false);
-  	const token = localStorage.getItem("token");
-	return (
-		<header className="w-full  h-[70px] shadow-xl flex justify-center items-center relative bg-blue-500 text-white">
-			<img
-				src="logo1.png"
-				alt="logo"
-				className="w-[60px] h-[60px] object-cover border-[3px] absolute left-1 rounded-full"
-			/>
-			<div className="hidden w-[450px]  md:flex justify-evenly items-center">
-				<Link to="/" className="hidden md:block text-[22px]  m-1">
-					Home
-				</Link>
-				<Link to="/contact" className="hidden md:block text-[22px]  m-1">
-					contact
-				</Link>
-				<Link to="/gallery" className="hidden md:block text-[22px]  m-1">
-					gallery
-				</Link>
-				{/* items */}
-				<Link to="/items" className="hidden md:block text-[22px]  m-1">
-					Items
-				</Link>
-				<Link
-					to="/booking"
-					className="hidden md:block text-[22px] font-bold m-1 absolute right-24"
-				>
-					<FaCartShopping />
-				</Link>
-			</div>
-			<GiHamburgerMenu
-				className="absolute right-5 text-[24px] md:hidden"
-				onClick={() => {
-					setNavPanelOpen(true);
-				}}
-			/>
-      {token!=null&&<button className="hidden md:block absolute right-5 text-[24px]" onClick={()=>{
-        localStorage.removeItem("token")
-        window.location.href = "/login"
-      }}>
-        logout
-      </button>}
-			<MobileNavPanel isOpen={navPanelOpen} setOpen={setNavPanelOpen} />
-		</header>
-	);
+  const [navPanelOpen, setNavPanelOpen] = useState(false);
+  const token = localStorage.getItem("token");
+  return (
+    <header className="w-full  h-[70px] shadow-xl flex justify-center items-center relative bg-blue-500 text-white">
+      <img
+        src="logo1.png"
+        alt="logo"
+        className="w-[60px] h-[60px] object-cover border-[3px] absolute left-1 rounded-full"
+      />
+      <div className="hidden w-[450px]  md:flex justify-evenly items-center">
+        <Link to="/" className="hidden md:block text-[22px]  m-1">
+          Home
+        </Link>
+        <Link to="/contact" className="hidden md:block text-[22px]  m-1">
+          contact
+        </Link>
+        <Link to="/gallery" className="hidden md:block text-[22px]  m-1">
+          gallery
+        </Link>
+        <Link to="/items" className="hidden md:block text-[22px]  m-1">
+          Items
+        </Link>
+        <Link
+          to="/booking"
+          className="hidden md:block text-[22px] font-bold m-1 absolute right-24"
+        >
+          <FaCartShopping />
+        </Link>
+      </div>
+      <GiHamburgerMenu
+        className="absolute right-5 text-[24px] md:hidden"
+        onClick={() => {
+          setNavPanelOpen(true);
+        }}
+      />
+      {token ? (
+        <button
+          className="hidden md:block absolute right-4 text-[24px]"
+          onClick={() => {
+            localStorage.removeItem("token");
+            window.location.href = "/login";
+          }}
+        >
+          logout
+        </button>
+      ) : (
+        <Link
+          to="/login"
+          className="hidden md:inline-block text-sm px-5 py-3 rounded-md text-white hover:bg-gray-200 transition"
+        >
+          Login
+        </Link>
+      )}
+      <MobileNavPanel isOpen={navPanelOpen} setOpen={setNavPanelOpen} />
+    </header>
+  );
 }
