@@ -2,12 +2,14 @@ import { CiHome, CiSpeaker } from "react-icons/ci";
 import { IoMdClose } from "react-icons/io";
 import { MdPhotoLibrary, MdContacts, MdInfoOutline } from "react-icons/md";
 import { FaRegCalendarCheck } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { FaRegUser } from "react-icons/fa6";
 
 export default function MobileNavPanel(props) {
 	const isOpen = props.isOpen;
 	const setOpen = props.setOpen;
 	const navigate = useNavigate();
+	const token = localStorage.getItem("token");
 
 	function goTo(route) {
 		navigate(route);
@@ -84,15 +86,29 @@ export default function MobileNavPanel(props) {
 							Contact
 						</div>
 
-						<div
-							onClick={() => {
-								goTo("/about");
-							}}
-							className="text-[20px] text-blue-500 m-1 p-2 flex items-center gap-2 cursor-pointer hover:bg-accent/10 rounded-md"
-						>
-							<MdInfoOutline className="text-2xl" />
-							About
+						<div>
+							{token ? (
+								<button
+								  className="text-[20px] text-blue-500 m-1 p-2 flex items-center gap-2 cursor-pointer hover:bg-accent/10 rounded-md"
+								  onClick={() => {
+									localStorage.removeItem("token");
+									window.location.href = "/login";
+								  }}
+								>
+								  <FaRegUser className="text-2xl"/>
+								  logout
+								</button>
+							  ) : (
+								<Link
+								  to="/login"
+								  className="text-[20px] text-blue-500 m-1 p-2 flex items-center gap-2 cursor-pointer hover:bg-accent/10 rounded-md"
+								>
+								  <FaRegUser className="text-2xl"/>
+								  Login
+								</Link>
+							  )}
 						</div>
+
 					</div>
 				</div>
 			)}
