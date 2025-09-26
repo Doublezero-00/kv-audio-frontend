@@ -2,13 +2,14 @@ import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { use } from "react";
 import { useGoogleLogin } from "@react-oauth/google";
+import RegisterPage from "./register/register";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
   const googleLogin = useGoogleLogin({
     onSuccess: (res) => {
       console.log(res);
@@ -107,6 +108,17 @@ export default function LoginPage() {
             Login with Google
           </button>
         </form>
+        <div className="flex items-center justify-center mt-3 gap-2">
+          <p className="login-redirect text-white">
+            Don't have an account?{" "}
+          </p>
+          <button
+            type="button"
+            onClick={() => navigate("/register")}
+            className="h-12 text-yellow-500 rounded-lg font-semibold text-base sm:text-lg transition cursor-pointer"
+          >Register
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -4,7 +4,6 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
-
 export default function RegisterPage() {
 
   const [email, setEmail] = useState("");
@@ -88,7 +87,7 @@ export default function RegisterPage() {
 
           <button onClick={handleOnSubmit}
             type="submit"
-            className="w-[300px] h-[50px] bg-[#f0ad38] text-white rounded-lg mt-4 hover:bg-[#e19a2f]"
+            className="w-[300px] h-[50px] bg-yellow-500 text-white rounded-lg mt-4 hover:bg-yellow-500"
           >
             Register
           </button>
